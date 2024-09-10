@@ -47,7 +47,10 @@
       // handling long responses
       let thing = setTimeout(() => {
         //console.log("fallback", time);
-        if (time <= 500) frame.remove();
+        if (time <= 500) {
+          frame.src = "red.html";
+          setTimeout(() => frame.remove(), 500);
+        }
         time *= 1 / 0.97;
         //console.log("i", i, time);
         di.innerHTML = i;
@@ -58,6 +61,7 @@
       // handling response
       if (frame) {
         frame.onload = () => {
+          if (frame.src == "file:///C:/Users/ryanj/GitHub/pinger/red.html") return;
           clearTimeout(thing);
           i++;
           frame.remove();
@@ -69,6 +73,7 @@
           dtime.innerHTML = time;
         }
         frame.onerror = () => {
+          if (frame.src == "red.html") return;
           clearTimeout(thing);
           frame.remove();
           time *= 1.25;
