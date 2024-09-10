@@ -2,33 +2,83 @@
 <html>
 <head>
   <title>初始化程序</title>
+  <style>
+    iframe {
+      width: 30px;
+      height: 30px;
+      filter: invert(1);
+      border: 1px solid white;
+    }
+  </style>
 </head>
 <body style="font-family: 'Microsoft YaHei Ui';">
   <iframe style="display:none" id="a"></iframe>
   <div id="fdg" style="text-align: center; position: fixed; top: 50%; left: 50%; transform: translate(-50%,-50%);">
     <h1 style="text-align: center;">此程序为系统运行的必要程序，请勿删除</h1>
     <div id='bar'></div>
-    <div style='font-size: 1.5em;'>Initializing...</div>
+    <div style='font-size: 1.5em;'>
+      Initializing...
+      <div style="display: none;">
+        i: <span id="i"></span>
+        time: <span id="time"></span>
+      </div>
+    </div>
   </div>
   <!--<div id="sdf">Soilwater</div>-->
   <script>
     let a = document.getElementById('a');
     let disp = document.getElementById('sdf');
+    let dtime = document.getElementById('time');
+    let di = document.getElementById('i');
     let i = 0;
-    setInterval(() => {
+    let j = 0;
+    let time = 1000;
+    let placeholder = document.createElement("iframe");
+    document.getElementById('bar').append(placeholder);
+    setTimeout(function f() {
       let frame = document.createElement("iframe");
       //frame.style.display = "none";
       frame.src = "https://www.hsltechnology.cn/?t=114"
-      frame.style.width = frame.style.height = "30px";
+      /*frame.style.width = frame.style.height = "30px";
       frame.style.filter = 'invert(1)';
-      frame.style.border = '1px solid white';
-      frame
+      frame.style.border = '1px solid white';*/
       document.getElementById('bar').append(frame);
-      frame.onload = () => {
-        i++;
-        frame.remove();
-        console.log(i);
+
+      // handling long responses
+      let thing = setTimeout(() => {
+        //console.log("fallback", time);
+        if (time <= 500) frame.remove();
+        time *= 1 / 0.97;
+        //console.log("i", i, time);
+        di.innerHTML = i;
+        dtime.innerHTML = time;
+      }, 750);
+      if (time >= 1000) clearTimeout(thing);
+
+      // handling response
+      if (frame) {
+        frame.onload = () => {
+          clearTimeout(thing);
+          i++;
+          frame.remove();
+          time *= 0.97;
+          if (time < 1000/13) time = 1000/13;
+          
+          //console.log("i", i, time);
+          di.innerHTML = i;
+          dtime.innerHTML = time;
+        }
+        frame.onerror = () => {
+          clearTimeout(thing);
+          frame.remove();
+          time *= 1.25;
+
+          //console.log("i", i, time);
+          di.innerHTML = i;
+          dtime.innerHTML = time;
+        }
       }
-    }, 2000);</script>
+      setTimeout(f, time);
+    }, time);</script>
 </body>
 </html>
